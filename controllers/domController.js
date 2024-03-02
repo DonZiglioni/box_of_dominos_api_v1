@@ -28,7 +28,6 @@ export const getNewBox = async (req, res) => {
     res.status(200).json({ message: `New Box of dominos with SetId: ${id}`, newBox: response })
 }
 
-
 export const getNewSet = async (req, res) => {
     let response;
     let id;
