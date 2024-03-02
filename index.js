@@ -15,7 +15,7 @@ import { MongoClient, ObjectId } from 'mongodb';
 import router from './routes/bodRoutes.js'
 
 const uri = process.env.DATABASE_URI;
-const client = new MongoClient(uri);
+const client = new MongoClient(uri, { useNewUrlParser: true });
 const database = client.db('Dominos');
 const boxes = database.collection('Boxes');
 
@@ -48,51 +48,51 @@ app.get('/v1', async (req, res) => {
 
 app.use('/v1/dominos', router)
 
-//  ****  RETURN A NEW, UNSHUFFLED BOX OF DOMINOS  ****
+//****  RETURN A NEW, UNSHUFFLED BOX OF DOMINOS  ****
 
-// app.get('/v1/newbox', async (req, res) => {
-//     let response;
-//     let id;
-//     try {
-//         const box = {
-//             remaining: 28,
-//             shuffled: false,
-//             dominos: dominoSet.dominos,
-//         }
-//         const result = await boxes.insertOne(box);
-//         id = result.insertedId;
-//         if (ObjectId.isValid(result.insertedId)) {
-//             response = await database.collection('Boxes').findOne({ _id: result.insertedId })
-//         }
-//     } catch (error) {
-//         console.log(error);
-//     }
-//     res.status(200).json({ message: `New Box of dominos with SetId: ${id}`, newBox: response })
-// })
+app.get('/v1/newbox', async (req, res) => {
+    let response;
+    let id;
+    try {
+        const box = {
+            remaining: 28,
+            shuffled: false,
+            dominos: dominoSet.dominos,
+        }
+        const result = await boxes.insertOne(box);
+        id = result.insertedId;
+        if (ObjectId.isValid(result.insertedId)) {
+            response = await database.collection('Boxes').findOne({ _id: result.insertedId })
+        }
+    } catch (error) {
+        console.log(error);
+    }
+    res.status(200).json({ message: `New Box of dominos with SetId: ${id}`, newBox: response })
+})
 
-//  ****  RETURN NEW SET OF SHUFFLED DOMINOS  ****
+//****  RETURN NEW SET OF SHUFFLED DOMINOS  ****
 
-// app.get('/v1/shuffledset', async (req, res) => {
-//     let response;
-//     let id;
-//     try {
-//         const shuffledSet = shuffleDominos(dominoSet.dominos);
-//         const box = {
-//             remaining: 28,
-//             shuffled: true,
-//             dominos: shuffledSet,
-//         }
-//         const result = await boxes.insertOne(box);
-//         id = result.insertedId;
-//         if (ObjectId.isValid(result.insertedId)) {
-//             response = await database.collection('Boxes').findOne({ _id: result.insertedId })
-//         }
-//     } catch (error) {
-//         console.log(error);
-//     }
+app.get('/v1/shuffledset', async (req, res) => {
+    let response;
+    let id;
+    try {
+        const shuffledSet = shuffleDominos(dominoSet.dominos);
+        const box = {
+            remaining: 28,
+            shuffled: true,
+            dominos: shuffledSet,
+        }
+        const result = await boxes.insertOne(box);
+        id = result.insertedId;
+        if (ObjectId.isValid(result.insertedId)) {
+            response = await database.collection('Boxes').findOne({ _id: result.insertedId })
+        }
+    } catch (error) {
+        console.log(error);
+    }
 
-//     res.status(200).json({ message: `New Box of shuffled dominos with SetId: ${id}`, shuffledSet: response })
-// })
+    res.status(200).json({ message: `New Box of shuffled dominos with SetId: ${id}`, shuffledSet: response })
+})
 
 
 
